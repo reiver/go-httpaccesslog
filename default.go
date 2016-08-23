@@ -16,7 +16,7 @@ var (
 
 func DefaultAccessLogWriter(writer io.Writer, w *ResponseWriter, r *http.Request, trace *Trace) {
 
-	io.WriteString(writer, "\"remote-host\"=")
+	io.WriteString(writer, "\"client-address\"=")
 	io.WriteString(writer, strconv.Quote(r.RemoteAddr) ) //@TODO: This is inefficient.
 
 	writer.Write(space)
@@ -33,6 +33,11 @@ func DefaultAccessLogWriter(writer io.Writer, w *ResponseWriter, r *http.Request
 
 	io.WriteString(writer, "\"request-protocol\"=")
 	io.WriteString(writer, strconv.Quote(r.Proto)) //@TODO: This is inefficient.
+
+	writer.Write(space)
+
+	io.WriteString(writer, "\"request-host\"=")
+	io.WriteString(writer, strconv.Quote(r.Host)) //@TODO: This is inefficient.
 
 	writer.Write(space)
 
@@ -60,7 +65,7 @@ func DefaultAccessLogWriter(writer io.Writer, w *ResponseWriter, r *http.Request
 
 		writer.Write(space)
 
-		io.WriteString(writer, "\"header\".")
+		io.WriteString(writer, "\"request-header\".")
 		io.WriteString(writer, strconv.Quote(headerName)) //@TODO: This is inefficient.
 		io.WriteString(writer, "=")
 
@@ -78,7 +83,7 @@ func DefaultAccessLogWriter(writer io.Writer, w *ResponseWriter, r *http.Request
 
 		writer.Write(space)
 
-		io.WriteString(writer, "\"trailer\".")
+		io.WriteString(writer, "\"request-trailer\".")
 		io.WriteString(writer, strconv.Quote(trailerName)) //@TODO: This is inefficient.
 		io.WriteString(writer, "=")
 
