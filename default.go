@@ -16,38 +16,38 @@ var (
 
 func DefaultAccessLogWriter(writer io.Writer, w *ResponseWriter, r *http.Request, trace *Trace) {
 
-	io.WriteString(writer, "\"client-address\"=")
+	io.WriteString(writer, "\"request\".\"client-address\"=")
 	io.WriteString(writer, strconv.Quote(r.RemoteAddr) ) //@TODO: This is inefficient.
 
 	writer.Write(space)
 
-	io.WriteString(writer, "\"request-method\"=")
+	io.WriteString(writer, "\"request\".\"method\"=")
 	io.WriteString(writer, strconv.Quote(r.Method))
 
 	writer.Write(space)
 
-	io.WriteString(writer, "\"request-uri\"=")
+	io.WriteString(writer, "\"request\".\"uri\"=")
 	io.WriteString(writer, strconv.Quote(r.URL.String())) //@TODO: This is inefficient.
 
 	writer.Write(space)
 
-	io.WriteString(writer, "\"request-protocol\"=")
+	io.WriteString(writer, "\"request\".\"protocol\"=")
 	io.WriteString(writer, strconv.Quote(r.Proto)) //@TODO: This is inefficient.
 
 	writer.Write(space)
 
-	io.WriteString(writer, "\"request-host\"=")
+	io.WriteString(writer, "\"request\".\"host\"=")
 	io.WriteString(writer, strconv.Quote(r.Host)) //@TODO: This is inefficient.
 
 	writer.Write(space)
 
-	io.WriteString(writer, "\"response-status-code\"=\"")
+	io.WriteString(writer, "\"response\".\"status-code\"=\"")
 	io.WriteString(writer, strconv.FormatInt(int64(w.StatusCode), 10)) //@TODO: This is inefficient.
 	io.WriteString(writer, "\"")
 
 	writer.Write(space)
 
-	io.WriteString(writer, "\"response-size\"=\"")
+	io.WriteString(writer, "\"response\".\"size\"=\"")
 	io.WriteString(writer, strconv.FormatInt(int64(w.BodySize), 10)) //@TODO: This is inefficient.
 	io.WriteString(writer, "\"")
 
@@ -65,7 +65,7 @@ func DefaultAccessLogWriter(writer io.Writer, w *ResponseWriter, r *http.Request
 
 		writer.Write(space)
 
-		io.WriteString(writer, "\"request-header\".")
+		io.WriteString(writer, "\"request\".\"header\".")
 		io.WriteString(writer, strconv.Quote(headerName)) //@TODO: This is inefficient.
 		io.WriteString(writer, "=")
 
@@ -83,7 +83,7 @@ func DefaultAccessLogWriter(writer io.Writer, w *ResponseWriter, r *http.Request
 
 		writer.Write(space)
 
-		io.WriteString(writer, "\"request-trailer\".")
+		io.WriteString(writer, "\"request\".\"trailer\".")
 		io.WriteString(writer, strconv.Quote(trailerName)) //@TODO: This is inefficient.
 		io.WriteString(writer, "=")
 
