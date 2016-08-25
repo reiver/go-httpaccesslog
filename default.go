@@ -41,13 +41,30 @@ func DefaultAccessLogWriter(writer io.Writer, w *ResponseWriter, r *http.Request
 
 	writer.Write(space)
 
+	io.WriteString(writer, "\"request\".\"content-length\"=\"")
+	io.WriteString(writer, strconv.FormatInt(int64(r.ContentLength), 10)) //@TODO: This is inefficient.
+	io.WriteString(writer, "\"")
+
+	writer.Write(space)
+
+	io.WriteString(writer, `"request"."transfer-encoding"=[`)
+	for i, transferEncoding := range r.TransferEncoding {
+		if 0 < i {
+			io.WriteString(writer, ", ")
+		}
+		io.WriteString(writer, strconv.Quote(transferEncoding)) //@TODO: This is inefficient.
+	}
+	io.WriteString(writer, `]`)
+
+	writer.Write(space)
+
 	io.WriteString(writer, "\"response\".\"status-code\"=\"")
 	io.WriteString(writer, strconv.FormatInt(int64(w.StatusCode), 10)) //@TODO: This is inefficient.
 	io.WriteString(writer, "\"")
 
 	writer.Write(space)
 
-	io.WriteString(writer, "\"response\".\"size\"=\"")
+	io.WriteString(writer, "\"response\".\"content-length\"=\"")
 	io.WriteString(writer, strconv.FormatInt(int64(w.BodySize), 10)) //@TODO: This is inefficient.
 	io.WriteString(writer, "\"")
 
