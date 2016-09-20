@@ -185,7 +185,9 @@ func TestDefaultAccessLogWriter(t *testing.T) {
 			BodySize:   test.ResponseSize,
 		}
 
-		DefaultAccessLogWriter(&buffer, &w, &r, &trace)
+		if err := DefaultAccessLogWriter(&buffer, &w, &r, &trace); nil != err {
+			t.Errorf("For test #%d, did not expect to get an error, but actually got one: (%T) %v", testNumber, err, err)
+		}
 
 		expected := test.ExpectedPrefix +
 			` "trace"."begin-time"=` + strconv.Quote(trace.BeginTime.String()) +

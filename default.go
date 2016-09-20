@@ -14,10 +14,10 @@ var (
 )
 
 
-func DefaultAccessLogWriter(writer io.Writer, w *ResponseWriter, r *http.Request, trace *Trace) {
+func DefaultAccessLogWriter(writer io.Writer, w *ResponseWriter, r *http.Request, trace *Trace) error {
 
 	io.WriteString(writer, "\"request\".\"client-address\"=")
-	io.WriteString(writer, strconv.Quote(r.RemoteAddr) ) //@TODO: This is inefficient.
+	io.WriteString(writer, strconv.Quote(r.RemoteAddr)) //@TODO: This is inefficient.
 
 	writer.Write(space)
 
@@ -115,4 +115,6 @@ func DefaultAccessLogWriter(writer io.Writer, w *ResponseWriter, r *http.Request
 	}
 
 	writer.Write(endl)
+
+	return nil
 }

@@ -14,7 +14,7 @@ var (
 )
 
 
-type WriterFunc func(io.Writer, *ResponseWriter, *http.Request, *Trace)
+type WriterFunc func(io.Writer, *ResponseWriter, *http.Request, *Trace)error
 
 
 type Handler struct {
