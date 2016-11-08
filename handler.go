@@ -17,6 +17,7 @@ var (
 type WriterFunc func(io.Writer, *ResponseWriter, *http.Request, *Trace)error
 
 
+// Handler is "middleware" that provides logging and tracing capabilities for your http.Handler.
 type Handler struct {
 	Subhandler      http.Handler
 	Writer          io.Writer
@@ -24,10 +25,11 @@ type Handler struct {
 }
 
 
+// ServeHTTP makes Handler fit the http.Handler interface.
 func (handler Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var trace Trace
 	trace.BeginTime = time.Now()
-
+	generateTraceID(trace.ID[:])
 
 	subhandler := handler.Subhandler
 	if nil == subhandler {

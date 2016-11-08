@@ -166,6 +166,7 @@ func TestDefaultAccessLogWriter(t *testing.T) {
 		var trace Trace
 		trace.BeginTime = time.Now()
 		trace.EndTime = trace.BeginTime.Add(5 * time.Minute)
+		generateTraceID(trace.ID[:])
 
 		uri, err := url.Parse(test.URL)
 		if nil != err {
@@ -190,6 +191,7 @@ func TestDefaultAccessLogWriter(t *testing.T) {
 		}
 
 		expected := test.ExpectedPrefix +
+			` "trace"."id"=` + strconv.Quote(string(trace.ID[:])) +
 			` "trace"."begin-time"=` + strconv.Quote(trace.BeginTime.String()) +
 			` "trace"."end-time"=` + strconv.Quote(trace.EndTime.String()) +
 			"\n"

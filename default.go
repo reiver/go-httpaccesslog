@@ -70,6 +70,11 @@ func DefaultAccessLogWriter(writer io.Writer, w *ResponseWriter, r *http.Request
 
 	writer.Write(space)
 
+	io.WriteString(writer, "\"trace\".\"id\"=")
+	io.WriteString(writer, strconv.Quote(string(trace.ID[:]))) //@TODO: This is inefficient.
+
+	writer.Write(space)
+
 	io.WriteString(writer, "\"trace\".\"begin-time\"=")
 	io.WriteString(writer, strconv.Quote(trace.BeginTime.String())) //@TODO: This is inefficient.
 
