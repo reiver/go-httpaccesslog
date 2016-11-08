@@ -24,6 +24,20 @@ type WriterFunc func(io.Writer, *ResponseWriter, *http.Request, *Trace)error
 
 
 // Handler is "middleware" that provides logging and tracing capabilities for your http.Handler.
+//
+//
+// By default access logs will be sent to STDOUT. (I.e., os.Stdout.)
+//
+// However, one can sent the access logs to any io.Writer, by setting the Writer field.
+//
+//
+// A trace ID will be automagically generated with each HTTP request.
+//
+// The trace ID will be returned to the HTTP client as the value of the "X-Trace" HTTP
+// response header.
+//
+// The sub-handler can get the value of the trace ID looking up the `"trace"."id"` in
+// the context of the *http.Request passed as a parameter to the ServeHTTP method.
 type Handler struct {
 	Subhandler      http.Handler
 	Writer          io.Writer
