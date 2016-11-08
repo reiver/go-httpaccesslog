@@ -2,10 +2,16 @@ package httpaccesslog
 
 
 import (
+	"context"
 	"io"
 	"net/http"
 	"os"
 	"time"
+)
+
+
+const (
+	traceIDContextKey = `"trace"."id"`
 )
 
 
@@ -28,8 +34,8 @@ type Handler struct {
 // ServeHTTP makes Handler fit the http.Handler interface.
 func (handler Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var trace Trace
-	trace.BeginTime = time.Now()
-	generateTraceID(trace.ID[:])
+	trace.initialize()
+
 
 	subhandler := handler.Subhandler
 	if nil == subhandler {
@@ -41,9 +47,22 @@ func (handler Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		writer = os.Stdout
 	}
 
+
 	var w2 ResponseWriter = ResponseWriter{w:w}
 
-	subhandler.ServeHTTP(&w2, r)
+
+	ctx := r.Context()
+	if nil == ctx {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	newCTX := context.WithValue(ctx, traceIDContextKey, string(trace.ID[:]))
+
+
+	r2 := r.WithContext(newCTX)
+
+
+	subhandler.ServeHTTP(&w2, r2)
 
 	trace.EndTime = time.Now()
 

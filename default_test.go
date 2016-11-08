@@ -164,9 +164,8 @@ func TestDefaultAccessLogWriter(t *testing.T) {
 		var buffer bytes.Buffer
 
 		var trace Trace
-		trace.BeginTime = time.Now()
+		trace.initialize()
 		trace.EndTime = trace.BeginTime.Add(5 * time.Minute)
-		generateTraceID(trace.ID[:])
 
 		uri, err := url.Parse(test.URL)
 		if nil != err {
