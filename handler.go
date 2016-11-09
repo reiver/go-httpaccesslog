@@ -11,6 +11,8 @@ import (
 
 
 const (
+	httpResponseTraceIDHeaderName = "X-Trace"
+
 	traceIDContextKey = `"trace"."id"`
 )
 
@@ -48,7 +50,12 @@ type Handler struct {
 // ServeHTTP makes Handler fit the http.Handler interface.
 func (handler Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var trace Trace
+
+	// This sets trace.BeginTime and trace.ID, but NOT trace.EndTime.
+	// trace.EndTime is set latter in this func.
 	trace.initialize()
+
+	w.Header().Add(httpResponseTraceIDHeaderName, string(trace.ID[:]))
 
 
 	subhandler := handler.Subhandler

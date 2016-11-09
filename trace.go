@@ -86,7 +86,7 @@ var (
 type Trace struct {
 	BeginTime time.Time
 	EndTime   time.Time
-	ID        [126]byte
+	ID        [32]byte
 }
 
 
