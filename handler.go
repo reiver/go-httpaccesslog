@@ -12,8 +12,6 @@ import (
 
 const (
 	httpResponseTraceIDHeaderName = "X-Trace"
-
-	traceIDContextKey = `"trace"."id"`
 )
 
 
