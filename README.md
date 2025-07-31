@@ -2,11 +2,28 @@
 
 Package **httpaccesslog** provides tools for creating HTTP access-logs, for the Go programming language.
 
+Package **httpaccesslog** provides HTTP "middleware" that provides HTTP access-log generation capabilities.
+
 ## Documention
 
 Online documentation, which includes examples, can be found at: http://godoc.org/github.com/reiver/go-httpaccesslog
 
 [![GoDoc](https://godoc.org/github.com/reiver/go-httpaccesslog?status.svg)](https://godoc.org/github.com/reiver/go-httpaccesslog)
+
+## Example
+
+Here is a simple example:
+
+```golang
+var subhandler http.Handler
+
+// ...
+
+var httpOverlordHandler http.Handler = httpaccesslog.Handler{
+	Subhandler: subhandler,
+	Writer:     os.Stdout,
+}
+```
 
 ## Import
 
